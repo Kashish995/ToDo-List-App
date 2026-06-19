@@ -16,7 +16,7 @@ const populateTodos = () => {
   let string = "";
 
   for (const todo of todos) {
-    string += ` <li class="todo-item ${todo.isCompleted? "completed":""}" >
+    string += ` <li id="todo-${todo.id}" class="todo-item ${todo.isCompleted? "completed":""}" >
                     <input type="checkbox" class="todo-checkbox" ${todo.isCompleted? "checked":""} >
                     <span class="todo-text">${todo.title}</span>
                     <button class="delete-btn">×</button>
@@ -24,7 +24,6 @@ const populateTodos = () => {
   }
   todoListUl.innerHTML =  string;
 }
-
 
 addTodoBtn.addEventListener("click", () => {
   todoText = inputTag.value;
@@ -50,6 +49,20 @@ todoCheckboxes.forEach((element) => {
   element.addEventListener("click", (e) => {
     if(e.target.checked) {
       element.parentNode.classList.add("completed")
+      console.log(element.parentNode.id)
+      // Grab this todo from todos array and update the todos array to set this todos isCompleted attribute as true
+      todos  = todos.map(todo => {
+        console.log("todo-" + todo.id, element.parentNode.id)
+        if("todo-" + todo.id == element.parentNode.id){
+          return {...todo, isCompleted: true}
+        }
+        else{
+          console.log(todo)
+          return todo
+        }
+      })
+      console.log(todos)
+      localStorage.setItem("todos", JSON.stringify(todos))
     }else{
        element.parentNode.classList.remove("completed")
     }
