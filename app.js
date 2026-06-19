@@ -1,6 +1,7 @@
 const addTodoBtn = document.getElementById("addTodoBtn");
 const inputTag = document.getElementById("todoInput");
 const todoListUl = document.getElementById("todoList");
+
 let todoText; //This should be populated when the user clicks on Add Button
 let todos = [];
 let todosString = localStorage.getItem("todos");
@@ -21,7 +22,7 @@ const populateTodos = () => {
                     <button class="delete-btn">×</button>
                 </li>`
   }
-  todoListUl.innerHTML = todoListUl.innerHTML + string;
+  todoListUl.innerHTML =  string;
 }
 
 
@@ -30,12 +31,27 @@ addTodoBtn.addEventListener("click", () => {
   inputTag.value = "";
 
   let todo = {
+    id: todos.length,
     title: todoText,
     isCompleted: false
   };
 
   todos.push(todo);
   localStorage.setItem("todos", JSON.stringify(todos))
+  populateTodos()
 })
 
 populateTodos()
+
+const todoCheckboxes = document.querySelectorAll(".todo-checkbox")
+
+todoCheckboxes.forEach((element) => {
+  console.log(element)
+  element.addEventListener("click", (e) => {
+    if(e.target.checked) {
+      element.parentNode.classList.add("completed")
+    }else{
+       element.parentNode.classList.remove("completed")
+    }
+  })
+})
