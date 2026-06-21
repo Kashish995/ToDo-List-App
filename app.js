@@ -13,15 +13,13 @@ if (todosString) {
 
 
 const populateTodos = () => {
-    let string = "";
-    let i = 0
+    let string = ""; 
     for (const todo of todos) {
-        string += `<li id="todo-${i}" class="todo-item ${todo.isCompleted ? "completed" : ""}">
+        string += `<li id="todo-${todo.id}" class="todo-item ${todo.isCompleted ? "completed" : ""}">
             <input type="checkbox" class="todo-checkbox" ${todo.isCompleted ? "checked" : ""} >
             <span class="todo-text">${todo.title}</span>
             <button class="delete-btn">×</button>
-        </li>`
-        i++;
+        </li>` 
     }
     todoListUl.innerHTML = string
 
@@ -33,15 +31,18 @@ const populateTodos = () => {
         element.addEventListener("click", (e) => {
             if (e.target.checked) {
                 element.parentNode.classList.add("completed")
+                console.log(todos)
                 // Grab this todo from todos array and update the todos array to set this todo's isCompleted attribute as true
                 todos = todos.map(todo => {
                     if ("todo-" + todo.id == element.parentNode.id) {
+                        console.log(todo.id, element.parentNode.id)
                         return { ...todo, isCompleted: true }
                     }
                     else {
                         return todo
                     }
                 })
+                console.log(todos)
                 localStorage.setItem("todos", JSON.stringify(todos))
             }
             else {
@@ -68,8 +69,7 @@ const populateTodos = () => {
     let deleteBtns = document.querySelectorAll(".delete-btn")
 
     deleteBtns.forEach((element) => {
-        element.addEventListener("click", (e) => {
-            console.log(e.target.parentNode.id)
+        element.addEventListener("click", (e) => { 
             todos = todos.filter((todo) => {
                 return ("todo-" + todo.id) !== (e.target.parentNode.id)
             })
@@ -83,16 +83,18 @@ const populateTodos = () => {
 
 addTodoBtn.addEventListener("click", () => {
     todoText = inputTag.value
+    // check if the length of todo is greater than 3 
+    if(todoText.trim().length<4){
+        alert("You cannot add a todo that small!")
+        return
+    }
     inputTag.value = ""
     let todo = {
-        id: todos.length,
+        id: "todo-" + Date.now(),
         title: todoText,
         isCompleted: false
     }
     todos.push(todo)
-    todos = todos.map((todo, i) => {
-        return { ...todo, id: i }
-    })
     localStorage.setItem("todos", JSON.stringify(todos))
     populateTodos()
 })
